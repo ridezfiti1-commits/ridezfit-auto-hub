@@ -281,7 +281,7 @@ export type Database = {
           full_name: string | null
           id: string
           phone: string | null
-          role: string | null
+          role: Database["public"]["Enums"]["user_role"]
           updated_at: string
           user_id: string
         }
@@ -291,7 +291,7 @@ export type Database = {
           full_name?: string | null
           id?: string
           phone?: string | null
-          role?: string | null
+          role?: Database["public"]["Enums"]["user_role"]
           updated_at?: string
           user_id: string
         }
@@ -301,7 +301,7 @@ export type Database = {
           full_name?: string | null
           id?: string
           phone?: string | null
-          role?: string | null
+          role?: Database["public"]["Enums"]["user_role"]
           updated_at?: string
           user_id?: string
         }
@@ -357,6 +357,7 @@ export type Database = {
           logo_url: string | null
           phone: string | null
           showroom_name: string
+          status: Database["public"]["Enums"]["showroom_status"] | null
           total_views: number | null
           total_visits: number | null
           updated_at: string
@@ -372,6 +373,7 @@ export type Database = {
           logo_url?: string | null
           phone?: string | null
           showroom_name: string
+          status?: Database["public"]["Enums"]["showroom_status"] | null
           total_views?: number | null
           total_visits?: number | null
           updated_at?: string
@@ -387,6 +389,7 @@ export type Database = {
           logo_url?: string | null
           phone?: string | null
           showroom_name?: string
+          status?: Database["public"]["Enums"]["showroom_status"] | null
           total_views?: number | null
           total_visits?: number | null
           updated_at?: string
@@ -402,7 +405,8 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      showroom_status: "active" | "inactive" | "pending"
+      user_role: "buyer" | "showroom" | "system_admin"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -529,6 +533,9 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      showroom_status: ["active", "inactive", "pending"],
+      user_role: ["buyer", "showroom", "system_admin"],
+    },
   },
 } as const
