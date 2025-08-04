@@ -14,7 +14,321 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      cars: {
+        Row: {
+          admin_id: string
+          color: string | null
+          condition: string
+          created_at: string
+          description: string | null
+          engine_size: string | null
+          features: string[] | null
+          fuel_type: string | null
+          id: string
+          images: string[] | null
+          make: string
+          mileage: number | null
+          model: string
+          price: number
+          status: string
+          transmission: string | null
+          updated_at: string
+          year: number
+        }
+        Insert: {
+          admin_id: string
+          color?: string | null
+          condition: string
+          created_at?: string
+          description?: string | null
+          engine_size?: string | null
+          features?: string[] | null
+          fuel_type?: string | null
+          id?: string
+          images?: string[] | null
+          make: string
+          mileage?: number | null
+          model: string
+          price: number
+          status?: string
+          transmission?: string | null
+          updated_at?: string
+          year: number
+        }
+        Update: {
+          admin_id?: string
+          color?: string | null
+          condition?: string
+          created_at?: string
+          description?: string | null
+          engine_size?: string | null
+          features?: string[] | null
+          fuel_type?: string | null
+          id?: string
+          images?: string[] | null
+          make?: string
+          mileage?: number | null
+          model?: string
+          price?: number
+          status?: string
+          transmission?: string | null
+          updated_at?: string
+          year?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cars_admin_id_fkey"
+            columns: ["admin_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      cart_items: {
+        Row: {
+          created_at: string
+          id: string
+          item_id: string
+          item_type: string
+          quantity: number | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          item_id: string
+          item_type: string
+          quantity?: number | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          item_id?: string
+          item_type?: string
+          quantity?: number | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cart_items_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      favorites: {
+        Row: {
+          created_at: string
+          id: string
+          item_id: string
+          item_type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          item_id: string
+          item_type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          item_id?: string
+          item_type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "favorites_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      merchandise: {
+        Row: {
+          admin_id: string
+          category: string
+          created_at: string
+          description: string | null
+          id: string
+          image_url: string | null
+          price: number
+          stock_quantity: number | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          admin_id: string
+          category: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          price: number
+          stock_quantity?: number | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          admin_id?: string
+          category?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          price?: number
+          stock_quantity?: number | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "merchandise_admin_id_fkey"
+            columns: ["admin_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          created_at: string
+          id: string
+          item_id: string
+          order_status: string
+          order_type: string
+          payment_method: string
+          payment_status: string
+          quantity: number | null
+          total_amount: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          item_id: string
+          order_status?: string
+          order_type: string
+          payment_method: string
+          payment_status?: string
+          quantity?: number | null
+          total_amount: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          item_id?: string
+          order_status?: string
+          order_type?: string
+          payment_method?: string
+          payment_status?: string
+          quantity?: number | null
+          total_amount?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orders_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string | null
+          full_name: string | null
+          id: string
+          phone: string | null
+          role: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          phone?: string | null
+          role?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          phone?: string | null
+          role?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      services: {
+        Row: {
+          admin_id: string
+          category: string
+          created_at: string
+          description: string | null
+          duration: string | null
+          id: string
+          image_url: string | null
+          price: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          admin_id: string
+          category: string
+          created_at?: string
+          description?: string | null
+          duration?: string | null
+          id?: string
+          image_url?: string | null
+          price: number
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          admin_id?: string
+          category?: string
+          created_at?: string
+          description?: string | null
+          duration?: string | null
+          id?: string
+          image_url?: string | null
+          price?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "services_admin_id_fkey"
+            columns: ["admin_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
