@@ -30,6 +30,9 @@ interface Car {
   features: string[];
   status: string;
   admin_id: string;
+  view_count: number;
+  stock_count: number;
+  video_url: string;
 }
 
 const CarDetails = () => {
@@ -47,8 +50,24 @@ const CarDetails = () => {
     if (id) {
       fetchCar();
       checkIfFavorite();
+      trackView();
     }
   }, [id, user]);
+
+  const trackView = async () => {
+    if (!id) return;
+    
+    try {
+      await supabase
+        .from('car_views')
+        .insert({
+          car_id: id,
+          user_id: user?.id || null
+        });
+    } catch (error) {
+      console.error('Error tracking view:', error);
+    }
+  };
 
   const fetchCar = async () => {
     try {
@@ -290,6 +309,11 @@ const CarDetails = () => {
                   {car.status}
                 </Badge>
               </div>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <span>Views: {car.view_count || 0}</span>
+                <span>•</span>
+                <span>Stock: {car.stock_count || 1}</span>
+              </div>
             </div>
 
             {/* Key Details */}
@@ -351,6 +375,38 @@ const CarDetails = () => {
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground">{car.description}</p>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Video */}
+            {car.video_url && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Video</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {car.video_url.includes('youtube.com') || car.video_url.includes('youtu.be') ? (
+                    <div className="aspect-video">
+                      <iframe
+                        src={car.video_url.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/')}
+                        className="w-full h-full rounded"
+                        allowFullScreen
+                        title="Car video"
+                        
+                      />
+                    </div>
+                  ) : (
+                    <video
+                      src={car.video_url}
+                      className="w-full aspect-video rounded"
+                      controls
+                      preload="metadata"
+                      autoPlay
+                      muted
+                      loop
+                    />
+                  )}
                 </CardContent>
               </Card>
             )}

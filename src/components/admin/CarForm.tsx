@@ -28,6 +28,8 @@ interface Car {
   images: string[];
   features: string[];
   status: string;
+  stock_count: number;
+  video_url: string;
 }
 
 interface CarFormProps {
@@ -62,12 +64,14 @@ export const CarForm = ({ car, onSuccess, onCancel }: CarFormProps) => {
     engine_size: car?.engine_size || '',
     condition: car?.condition || 'used',
     description: car?.description || '',
-    status: car?.status || 'available'
+    status: car?.status || 'available',
+    stock_count: car?.stock_count || 1
   });
 
   const [images, setImages] = useState<string[]>(car?.images || ['']);
   const [selectedFeatures, setSelectedFeatures] = useState<string[]>(car?.features || []);
   const [newCustomFeature, setNewCustomFeature] = useState('');
+  const [videoUrl, setVideoUrl] = useState(car?.video_url || '');
 
   const handleInputChange = (field: string, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -117,6 +121,7 @@ export const CarForm = ({ car, onSuccess, onCancel }: CarFormProps) => {
         ...formData,
         images: images.filter(img => img.trim()),
         features: selectedFeatures,
+        video_url: videoUrl.trim() || null,
         admin_id: user.id
       };
 
@@ -202,6 +207,17 @@ export const CarForm = ({ car, onSuccess, onCancel }: CarFormProps) => {
                 onChange={(e) => handleInputChange('price', parseFloat(e.target.value))}
                 min="0"
                 step="0.01"
+                required
+              />
+            </div>
+            <div>
+              <Label htmlFor="stock_count">Stock Count *</Label>
+              <Input
+                id="stock_count"
+                type="number"
+                value={formData.stock_count}
+                onChange={(e) => handleInputChange('stock_count', parseInt(e.target.value))}
+                min="0"
                 required
               />
             </div>
@@ -353,6 +369,45 @@ export const CarForm = ({ car, onSuccess, onCancel }: CarFormProps) => {
               <Plus className="h-4 w-4 mr-2" />
               Add Another Image
             </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Video</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div>
+            <Label htmlFor="video_url">Video URL (YouTube or hosted video link)</Label>
+            <Input
+              id="video_url"
+              value={videoUrl}
+              onChange={(e) => setVideoUrl(e.target.value)}
+              placeholder="https://www.youtube.com/watch?v=... or https://example.com/video.mp4"
+            />
+            {videoUrl && (
+              <div className="mt-4">
+                <p className="text-sm text-muted-foreground mb-2">Video Preview:</p>
+                {videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be') ? (
+                  <div className="aspect-video">
+                    <iframe
+                      src={videoUrl.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/')}
+                      className="w-full h-full rounded"
+                      allowFullScreen
+                      title="Car video"
+                    />
+                  </div>
+                ) : (
+                  <video
+                    src={videoUrl}
+                    className="w-full aspect-video rounded"
+                    controls
+                    preload="metadata"
+                  />
+                )}
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>

@@ -103,6 +103,22 @@ export const Navbar = () => {
               </DropdownMenuContent>
             </DropdownMenu>
 
+            <Button 
+              variant="ghost" 
+              className="text-foreground hover:text-primary transition-colors"
+              asChild
+            >
+              <Link to="/showrooms">Showrooms</Link>
+            </Button>
+
+            <Button 
+              variant="ghost" 
+              className="text-foreground hover:text-primary transition-colors"
+              asChild
+            >
+              <Link to="/learn">Learn</Link>
+            </Button>
+
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="text-foreground hover:text-primary transition-colors">
@@ -228,6 +244,20 @@ export const Navbar = () => {
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Services
+              </Link>
+              <Link 
+                to="/showrooms" 
+                className="text-foreground hover:text-primary transition-colors"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Showrooms
+              </Link>
+              <Link 
+                to="/learn" 
+                className="text-foreground hover:text-primary transition-colors"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Learn
               </Link>
               
               <div className="flex items-center space-x-4 pt-4 border-t border-border">

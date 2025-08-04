@@ -37,11 +37,11 @@ const Dashboard = () => {
 
   useEffect(() => {
     let mounted = true;
-    if (user && profile?.role === 'admin') {
+    if (user && profile?.role === 'showroom') {
       fetchStats().finally(() => {
         if (mounted) setLoading(false);
       });
-    } else if (profile?.role !== 'admin') {
+    } else if (profile?.role !== 'showroom') {
       setLoading(false);
     }
     return () => { mounted = false; };
@@ -121,7 +121,7 @@ const Dashboard = () => {
     );
   }
 
-  if (profile?.role !== 'admin') {
+  if (profile?.role !== 'showroom') {
     return (
       <div className="min-h-screen bg-background">
         <Navbar />
@@ -129,7 +129,7 @@ const Dashboard = () => {
           <div className="text-center">
             <h1 className="text-2xl font-bold mb-4">Access Denied</h1>
             <p className="text-muted-foreground mb-4">
-              You need admin access to view this page.
+              You need showroom access to view this page.
             </p>
             <Button onClick={() => window.history.back()}>
               Go Back
@@ -147,7 +147,7 @@ const Dashboard = () => {
       <div className="container py-6">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-3xl font-bold">Admin Dashboard</h1>
+            <h1 className="text-3xl font-bold">Showroom Dashboard</h1>
             <p className="text-muted-foreground">
               Manage your inventory and track your business
             </p>
@@ -237,7 +237,7 @@ const Dashboard = () => {
 
         {/* Management Tabs */}
         <Tabs defaultValue="cars" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="cars" className="flex items-center gap-2">
               <Car className="h-4 w-4" />
               Cars
@@ -253,6 +253,14 @@ const Dashboard = () => {
             <TabsTrigger value="orders" className="flex items-center gap-2">
               <Users className="h-4 w-4" />
               Orders
+            </TabsTrigger>
+            <TabsTrigger value="clients" className="flex items-center gap-2">
+              <Users className="h-4 w-4" />
+              Clients
+            </TabsTrigger>
+            <TabsTrigger value="team" className="flex items-center gap-2">
+              <Users className="h-4 w-4" />
+              Team
             </TabsTrigger>
           </TabsList>
 
@@ -270,6 +278,30 @@ const Dashboard = () => {
 
           <TabsContent value="orders">
             <OrderManagement />
+          </TabsContent>
+
+          <TabsContent value="clients">
+            <div className="space-y-6">
+              <h3 className="text-lg font-semibold">Client Management</h3>
+              <p className="text-muted-foreground">Manage all users who have placed orders with your showroom.</p>
+              {/* Clients component would go here */}
+              <div className="text-center py-8 border-2 border-dashed border-border rounded-lg">
+                <Users className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                <p className="text-muted-foreground">Clients management coming soon</p>
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="team">
+            <div className="space-y-6">
+              <h3 className="text-lg font-semibold">Team Management</h3>
+              <p className="text-muted-foreground">Manage team members and assign roles within your showroom.</p>
+              {/* Team component would go here */}
+              <div className="text-center py-8 border-2 border-dashed border-border rounded-lg">
+                <Users className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                <p className="text-muted-foreground">Team management coming soon</p>
+              </div>
+            </div>
           </TabsContent>
         </Tabs>
       </div>

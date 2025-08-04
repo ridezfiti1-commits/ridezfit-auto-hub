@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Home, Store, User, ShoppingCart } from "lucide-react";
+import { Home, Store, User, ShoppingCart, Building2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
@@ -20,8 +20,14 @@ export const MobileNav = () => {
       active: location.pathname === "/",
     },
     {
+      label: "Showrooms",
+      href: "/showrooms",
+      icon: Building2,
+      active: location.pathname === "/showrooms" || location.pathname.startsWith("/showroom/"),
+    },
+    {
       label: "Sell",
-      href: profile?.role === 'admin' ? "/dashboard" : "/auth?role=admin",
+      href: profile?.role === 'showroom' ? "/dashboard" : "/auth?role=showroom",
       icon: Store,
       active: location.pathname.startsWith("/dashboard"),
     },
@@ -42,7 +48,7 @@ export const MobileNav = () => {
 
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border z-50 md:hidden">
-      <div className="grid grid-cols-4 h-16">
+      <div className="grid grid-cols-5 h-16">
         {navItems.map((item) => {
           const Icon = item.icon;
           return (

@@ -16,6 +16,8 @@ import Cart from "@/pages/Cart";
 import Checkout from "@/pages/Checkout";
 import Profile from "@/pages/Profile";
 import ShowroomProfile from "@/pages/ShowroomProfile";
+import Showrooms from "@/pages/Showrooms";
+import Learn from "@/pages/Learn";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { CartProvider } from "@/contexts/CartContext";
 
@@ -41,8 +43,10 @@ function App() {
                     <Route path="/cart" element={<Cart />} />
                      <Route path="/checkout" element={<Checkout />} />
                      <Route path="/profile" element={<Profile />} />
-                     <Route path="/showroom/:id" element={<ShowroomProfile />} />
-                    <Route path="*" element={<NotFound />} />
+            <Route path="/showroom/:id" element={<ShowroomProfile />} />
+            <Route path="/showrooms" element={<Showrooms />} />
+            <Route path="/learn" element={<Learn />} />
+            <Route path="*" element={<NotFound />} />
                   </Routes>
                   <Toaster />
                   <Sonner />

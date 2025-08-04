@@ -24,6 +24,8 @@ interface Car {
   images: string[];
   features: string[];
   status: string;
+  stock_count: number;
+  video_url: string;
   created_at: string;
 }
 
