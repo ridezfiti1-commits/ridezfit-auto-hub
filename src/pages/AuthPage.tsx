@@ -63,10 +63,10 @@ const AuthPage = () => {
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="buyer">Buyer</SelectItem>
-                      <SelectItem value="admin">Admin/Seller</SelectItem>
-                    </SelectContent>
+                     <SelectContent>
+                       <SelectItem value="buyer">Buyer</SelectItem>
+                       <SelectItem value="showroom">Showroom</SelectItem>
+                     </SelectContent>
                   </Select>
                 </div>
               </>

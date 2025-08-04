@@ -16,6 +16,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useCart } from "@/contexts/CartContext";
 import { toast } from "@/hooks/use-toast";
 import CarShowcase from "@/components/sections/CarShowcase";
+import { ChatAssistant } from "@/components/layout/ChatAssistant";
 
 // Import Kenyan landscape images
 import kenyaLandscape from "@/assets/kenya-landscape-1.jpg";
@@ -31,13 +32,6 @@ const Index = () => {
   // Hero carousel slides data with Kenyan backgrounds
   const heroSlides = [
     {
-      title: "Trust the Drive. Love the Ride.",
-      subtitle: "Every purchase protected by our escrow guarantee",
-      buttonText: "Browse Cars",
-      buttonLink: "/cars",
-      image: kenyaLandscape
-    },
-    {
       title: "AI-Powered Car Matching",
       subtitle: "Let our AI find your perfect match",
       buttonText: "Get Matched",
@@ -45,11 +39,18 @@ const Index = () => {
       image: nairobiCityscape
     },
     {
-      title: "Find Your Soul Ride",
+      title: "Find Your Perfect Match",
       subtitle: "Discover Kenya's most trusted car marketplace",
       buttonText: "Start Your Journey",
       buttonLink: "/cars",
       image: kenyaCountryside
+    },
+    {
+      title: "Premium Car Selection",
+      subtitle: "Quality vehicles from trusted showrooms",
+      buttonText: "Browse Cars",
+      buttonLink: "/cars",
+      image: kenyaLandscape
     }
   ];
 
@@ -532,6 +533,7 @@ const Index = () => {
 
       <Footer />
       <MobileNav />
+      <ChatAssistant />
     </div>
   );
 };
