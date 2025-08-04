@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Car, ShoppingCart, User, Menu, X } from "lucide-react";
+import { Car, ShoppingCart, User, Menu, X, ChevronDown } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
 import { useState } from "react";
@@ -37,15 +37,108 @@ export const Navbar = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-6">
-            <Link to="/cars" className="text-foreground hover:text-primary transition-colors">
-              Cars
-            </Link>
-            <Link to="/merchandise" className="text-foreground hover:text-primary transition-colors">
-              Merchandise
-            </Link>
-            <Link to="/services" className="text-foreground hover:text-primary transition-colors">
-              Services
-            </Link>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="text-foreground hover:text-primary transition-colors">
+                  Cars <ChevronDown className="h-4 w-4 ml-1" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="bg-background border shadow-lg">
+                <DropdownMenuItem asChild>
+                  <Link to="/cars">All Cars</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/cars?category=new">New Cars</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/cars?category=used">Used Cars</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/cars?category=certified">Certified Pre-Owned</Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="text-foreground hover:text-primary transition-colors">
+                  Services <ChevronDown className="h-4 w-4 ml-1" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="bg-background border shadow-lg">
+                <DropdownMenuItem asChild>
+                  <Link to="/services">All Services</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/services?category=maintenance">Maintenance</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/services?category=financing">Financing</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/services?category=insurance">Insurance</Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="text-foreground hover:text-primary transition-colors">
+                  Merchandise <ChevronDown className="h-4 w-4 ml-1" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="bg-background border shadow-lg">
+                <DropdownMenuItem asChild>
+                  <Link to="/merchandise">All Accessories</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/merchandise?category=interior">Interior</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/merchandise?category=exterior">Exterior</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/merchandise?category=electronics">Electronics</Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="text-foreground hover:text-primary transition-colors">
+                  Account <ChevronDown className="h-4 w-4 ml-1" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="bg-background border shadow-lg">
+                {user ? (
+                  <>
+                    <DropdownMenuItem asChild>
+                      <Link to="/profile">My Profile</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/orders">My Orders</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/favorites">Favorites</Link>
+                    </DropdownMenuItem>
+                    {profile?.role === 'admin' && (
+                      <DropdownMenuItem asChild>
+                        <Link to="/dashboard">Admin Dashboard</Link>
+                      </DropdownMenuItem>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <DropdownMenuItem asChild>
+                      <Link to="/auth">Sign In</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/auth">Register</Link>
+                    </DropdownMenuItem>
+                  </>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
 
           {/* Desktop Actions */}
@@ -79,7 +172,7 @@ export const Navbar = () => {
                     {profile?.full_name || 'User'}
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
+                <DropdownMenuContent align="end" className="bg-background border shadow-lg">
                   <DropdownMenuItem asChild>
                     <Link to="/profile">Profile</Link>
                   </DropdownMenuItem>

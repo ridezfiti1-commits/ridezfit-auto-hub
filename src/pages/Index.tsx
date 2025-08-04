@@ -15,6 +15,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useCart } from "@/contexts/CartContext";
 import { toast } from "@/hooks/use-toast";
+import CarShowcase from "@/components/sections/CarShowcase";
 
 // Import Kenyan landscape images
 import kenyaLandscape from "@/assets/kenya-landscape-1.jpg";
@@ -129,6 +130,9 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
+      
+      {/* Car Showcase */}
+      <CarShowcase />
       
       {/* Hero Carousel */}
       <section className="relative">
