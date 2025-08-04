@@ -30,6 +30,7 @@ export type Database = {
           mileage: number | null
           model: string
           price: number
+          showroom_id: string | null
           status: string
           transmission: string | null
           updated_at: string
@@ -50,6 +51,7 @@ export type Database = {
           mileage?: number | null
           model: string
           price: number
+          showroom_id?: string | null
           status?: string
           transmission?: string | null
           updated_at?: string
@@ -70,12 +72,21 @@ export type Database = {
           mileage?: number | null
           model?: string
           price?: number
+          showroom_id?: string | null
           status?: string
           transmission?: string | null
           updated_at?: string
           year?: number
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "cars_showroom_id_fkey"
+            columns: ["showroom_id"]
+            isOneToOne: false
+            referencedRelation: "showroom_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       cart_items: {
         Row: {
@@ -302,6 +313,48 @@ export type Database = {
           price?: number
           title?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      showroom_profiles: {
+        Row: {
+          admin_id: string
+          created_at: string
+          description: string | null
+          email: string | null
+          id: string
+          location: string | null
+          logo_url: string | null
+          phone: string | null
+          showroom_name: string
+          updated_at: string
+          website: string | null
+        }
+        Insert: {
+          admin_id: string
+          created_at?: string
+          description?: string | null
+          email?: string | null
+          id?: string
+          location?: string | null
+          logo_url?: string | null
+          phone?: string | null
+          showroom_name: string
+          updated_at?: string
+          website?: string | null
+        }
+        Update: {
+          admin_id?: string
+          created_at?: string
+          description?: string | null
+          email?: string | null
+          id?: string
+          location?: string | null
+          logo_url?: string | null
+          phone?: string | null
+          showroom_name?: string
+          updated_at?: string
+          website?: string | null
         }
         Relationships: []
       }

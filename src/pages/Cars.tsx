@@ -16,15 +16,25 @@ const Cars = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [makeFilter, setMakeFilter] = useState("all");
   const [conditionFilter, setConditionFilter] = useState("all");
+  const [fuelTypeFilter, setFuelTypeFilter] = useState("all");
+  const [transmissionFilter, setTransmissionFilter] = useState("all");
+  const [yearFilter, setYearFilter] = useState("all");
+  const [priceRange, setPriceRange] = useState([0, 5000000]);
   const [sortBy, setSortBy] = useState("newest");
   const { addToCart } = useCart();
 
   const { data: cars = [], isLoading } = useQuery({
-    queryKey: ['cars', searchTerm, makeFilter, conditionFilter, sortBy],
+    queryKey: ['cars', searchTerm, makeFilter, conditionFilter, fuelTypeFilter, transmissionFilter, yearFilter, priceRange, sortBy],
     queryFn: async () => {
       let query = supabase
         .from('cars')
-        .select('*')
+        .select(`
+          *,
+          showroom_profiles(
+            showroom_name,
+            location
+          )
+        `)
         .eq('status', 'available');
 
       if (searchTerm) {
@@ -38,6 +48,29 @@ const Cars = () => {
       if (conditionFilter && conditionFilter !== "all") {
         query = query.eq('condition', conditionFilter);
       }
+
+      if (fuelTypeFilter && fuelTypeFilter !== "all") {
+        query = query.eq('fuel_type', fuelTypeFilter);
+      }
+
+      if (transmissionFilter && transmissionFilter !== "all") {
+        query = query.eq('transmission', transmissionFilter);
+      }
+
+      if (yearFilter && yearFilter !== "all") {
+        if (yearFilter === '2020+') {
+          query = query.gte('year', 2020);
+        } else if (yearFilter === '2015-2019') {
+          query = query.gte('year', 2015).lte('year', 2019);
+        } else if (yearFilter === '2010-2014') {
+          query = query.gte('year', 2010).lte('year', 2014);
+        } else if (yearFilter === 'before-2010') {
+          query = query.lt('year', 2010);
+        }
+      }
+
+      // Price range filter
+      query = query.gte('price', priceRange[0]).lte('price', priceRange[1]);
 
       switch (sortBy) {
         case 'price_low':
@@ -97,13 +130,14 @@ const Cars = () => {
           </p>
         </div>
 
-        {/* Filters */}
+        {/* Enhanced Filters */}
         <div className="mb-8 p-6 bg-muted rounded-lg">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-            <div className="relative">
+          <h3 className="text-lg font-semibold mb-4">Search & Filter Cars</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+            <div className="relative col-span-full lg:col-span-2">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
               <Input
-                placeholder="Search cars..."
+                placeholder="Search by make, model, or features..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10"
@@ -133,6 +167,46 @@ const Cars = () => {
                 <SelectItem value="certified">Certified</SelectItem>
               </SelectContent>
             </Select>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+            <Select value={fuelTypeFilter} onValueChange={setFuelTypeFilter}>
+              <SelectTrigger>
+                <SelectValue placeholder="All Fuel Types" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Fuel Types</SelectItem>
+                <SelectItem value="petrol">Petrol</SelectItem>
+                <SelectItem value="diesel">Diesel</SelectItem>
+                <SelectItem value="hybrid">Hybrid</SelectItem>
+                <SelectItem value="electric">Electric</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Select value={transmissionFilter} onValueChange={setTransmissionFilter}>
+              <SelectTrigger>
+                <SelectValue placeholder="All Transmissions" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Transmissions</SelectItem>
+                <SelectItem value="manual">Manual</SelectItem>
+                <SelectItem value="automatic">Automatic</SelectItem>
+                <SelectItem value="cvt">CVT</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Select value={yearFilter} onValueChange={setYearFilter}>
+              <SelectTrigger>
+                <SelectValue placeholder="All Years" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Years</SelectItem>
+                <SelectItem value="2020+">2020 & Newer</SelectItem>
+                <SelectItem value="2015-2019">2015 - 2019</SelectItem>
+                <SelectItem value="2010-2014">2010 - 2014</SelectItem>
+                <SelectItem value="before-2010">Before 2010</SelectItem>
+              </SelectContent>
+            </Select>
 
             <Select value={sortBy} onValueChange={setSortBy}>
               <SelectTrigger>
@@ -146,11 +220,32 @@ const Cars = () => {
                 <SelectItem value="year_old">Year: Oldest</SelectItem>
               </SelectContent>
             </Select>
-
-            <Button variant="outline" className="w-full">
-              <Filter className="h-4 w-4 mr-2" />
-              Advanced Filters
-            </Button>
+          </div>
+          
+          <div className="mb-4">
+            <label className="text-sm font-medium mb-2 block">
+              Price Range: KSh {priceRange[0].toLocaleString()} - KSh {priceRange[1].toLocaleString()}
+            </label>
+            <div className="px-2">
+              <input
+                type="range"
+                min={0}
+                max={5000000}
+                step={100000}
+                value={priceRange[0]}
+                onChange={(e) => setPriceRange([parseInt(e.target.value), priceRange[1]])}
+                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+              />
+              <input
+                type="range"
+                min={0}
+                max={5000000}
+                step={100000}
+                value={priceRange[1]}
+                onChange={(e) => setPriceRange([priceRange[0], parseInt(e.target.value)])}
+                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer mt-2"
+              />
+            </div>
           </div>
         </div>
 
@@ -217,6 +312,32 @@ const Cars = () => {
                 <p className="text-muted-foreground text-sm mb-3">
                   {car.description?.substring(0, 100)}...
                 </p>
+                
+                {/* Showroom info */}
+                {car.showroom_profiles && (
+                  <div className="mb-3 p-2 bg-primary/5 rounded-md">
+                    <div className="text-sm">
+                      <strong className="text-primary">
+                        {car.showroom_profiles.showroom_name}
+                      </strong>
+                      {car.showroom_profiles.location && (
+                        <div className="text-muted-foreground text-xs">
+                          📍 {car.showroom_profiles.location}
+                        </div>
+                      )}
+                      <Button
+                        variant="link"
+                        size="sm"
+                        className="p-0 h-auto text-xs"
+                        asChild
+                      >
+                        <Link to={`/showroom/${car.showroom_id}`}>
+                          View Showroom →
+                        </Link>
+                      </Button>
+                    </div>
+                  </div>
+                )}
                 
                 <div className="grid grid-cols-2 gap-2 text-sm mb-3">
                   <div>

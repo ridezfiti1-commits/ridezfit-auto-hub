@@ -121,11 +121,11 @@ export const Navbar = () => {
                     <DropdownMenuItem asChild>
                       <Link to="/favorites">Favorites</Link>
                     </DropdownMenuItem>
-                    {profile?.role === 'admin' && (
-                      <DropdownMenuItem asChild>
-                        <Link to="/dashboard">Admin Dashboard</Link>
-                      </DropdownMenuItem>
-                    )}
+                     {profile?.role === 'showroom' && (
+                       <DropdownMenuItem asChild>
+                         <Link to="/dashboard">Showroom Dashboard</Link>
+                       </DropdownMenuItem>
+                     )}
                   </>
                 ) : (
                   <>
@@ -176,11 +176,11 @@ export const Navbar = () => {
                   <DropdownMenuItem asChild>
                     <Link to="/profile">Profile</Link>
                   </DropdownMenuItem>
-                  {profile?.role === 'admin' && (
-                    <DropdownMenuItem asChild>
-                      <Link to="/dashboard">Dashboard</Link>
-                    </DropdownMenuItem>
-                  )}
+                   {profile?.role === 'showroom' && (
+                     <DropdownMenuItem asChild>
+                       <Link to="/dashboard">Dashboard</Link>
+                     </DropdownMenuItem>
+                   )}
                   <DropdownMenuItem onClick={handleSignOut}>
                     Sign Out
                   </DropdownMenuItem>
@@ -258,13 +258,13 @@ export const Navbar = () => {
                         Profile
                       </Link>
                     </Button>
-                    {profile?.role === 'admin' && (
-                      <Button variant="outline" size="sm" asChild>
-                        <Link to="/dashboard" onClick={() => setIsMobileMenuOpen(false)}>
-                          Dashboard
-                        </Link>
-                      </Button>
-                    )}
+                     {profile?.role === 'showroom' && (
+                       <Button variant="outline" size="sm" asChild>
+                         <Link to="/dashboard" onClick={() => setIsMobileMenuOpen(false)}>
+                           Dashboard
+                         </Link>
+                       </Button>
+                     )}
                     <Button 
                       variant="outline" 
                       size="sm" 
