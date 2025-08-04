@@ -13,7 +13,7 @@ import { Search, Filter, Wrench, ShoppingCart } from "lucide-react";
 
 const Merchandise = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("all");
   const [sortBy, setSortBy] = useState("newest");
   const { addToCart } = useCart();
 
@@ -28,7 +28,7 @@ const Merchandise = () => {
         query = query.ilike('title', `%${searchTerm}%`);
       }
 
-      if (categoryFilter) {
+      if (categoryFilter && categoryFilter !== 'all') {
         query = query.eq('category', categoryFilter);
       }
 
@@ -104,7 +104,7 @@ const Merchandise = () => {
                 <SelectValue placeholder="All Categories" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Categories</SelectItem>
+                <SelectItem value="all">All Categories</SelectItem>
                 {categories.map(category => (
                   <SelectItem key={category} value={category}>{category}</SelectItem>
                 ))}
