@@ -1,0 +1,65 @@
+-- Create enum for user roles
+CREATE TYPE public.user_role AS ENUM ('buyer', 'showroom', 'system_admin');
+
+-- Create enum for showroom status
+CREATE TYPE public.showroom_status AS ENUM ('active', 'inactive', 'pending');
+
+-- Add status column to showroom_profiles for visibility control
+ALTER TABLE public.showroom_profiles 
+ADD COLUMN status showroom_status DEFAULT 'active'::showroom_status;
+
+-- First remove the default constraint from role column
+ALTER TABLE public.profiles ALTER COLUMN role DROP DEFAULT;
+
+-- Update existing data to ensure compatibility
+UPDATE public.profiles SET role = 'buyer' WHERE role IS NULL OR role = '';
+UPDATE public.profiles SET role = 'showroom' WHERE role = 'showroom';
+
+-- Convert the column to use the enum type
+ALTER TABLE public.profiles 
+ALTER COLUMN role TYPE user_role USING role::user_role;
+
+-- Add back the default value
+ALTER TABLE public.profiles 
+ALTER COLUMN role SET DEFAULT 'buyer'::user_role;
+
+-- Create indexes for better performance
+CREATE INDEX idx_showroom_profiles_status ON public.showroom_profiles(status);
+CREATE INDEX idx_cars_showroom_status ON public.cars(showroom_id, status);
+CREATE INDEX idx_profiles_role ON public.profiles(role);
+
+-- Create RLS policy for system admin access to showrooms
+CREATE POLICY "System admins can manage all showrooms" 
+ON public.showroom_profiles 
+FOR ALL 
+USING (
+  EXISTS (
+    SELECT 1 FROM public.profiles 
+    WHERE user_id = auth.uid() AND role = 'system_admin'
+  )
+);
+
+-- Create RLS policy for system admin access to cars
+CREATE POLICY "System admins can manage all cars" 
+ON public.cars 
+FOR ALL 
+USING (
+  EXISTS (
+    SELECT 1 FROM public.profiles 
+    WHERE user_id = auth.uid() AND role = 'system_admin'
+  )
+);
+
+-- Update showroom profiles visibility policy
+DROP POLICY IF EXISTS "Anyone can view showroom profiles" ON public.showroom_profiles;
+CREATE POLICY "Anyone can view active showroom profiles" 
+ON public.showroom_profiles 
+FOR SELECT 
+USING (status = 'active' OR EXISTS (
+  SELECT 1 FROM public.profiles 
+  WHERE user_id = auth.uid() AND role IN ('showroom', 'system_admin')
+));
+
+-- Ensure showroom names are unique
+ALTER TABLE public.showroom_profiles 
+ADD CONSTRAINT unique_showroom_name UNIQUE (showroom_name);
