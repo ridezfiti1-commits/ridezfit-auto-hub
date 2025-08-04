@@ -27,10 +27,10 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-        <TooltipProvider>
-          <AuthProvider>
-            <CartProvider>
-              <Router>
+        <AuthProvider>
+          <CartProvider>
+            <Router>
+              <TooltipProvider>
                 <div className="min-h-screen bg-background">
                   <Routes>
                     <Route path="/" element={<Index />} />
@@ -51,10 +51,10 @@ function App() {
                   <Toaster />
                   <Sonner />
                 </div>
-              </Router>
-            </CartProvider>
-          </AuthProvider>
-        </TooltipProvider>
+              </TooltipProvider>
+            </Router>
+          </CartProvider>
+        </AuthProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );
