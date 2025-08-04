@@ -36,10 +36,16 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (user) {
-      fetchStats();
+    let mounted = true;
+    if (user && profile?.role === 'admin') {
+      fetchStats().finally(() => {
+        if (mounted) setLoading(false);
+      });
+    } else if (profile?.role !== 'admin') {
+      setLoading(false);
     }
-  }, [user]);
+    return () => { mounted = false; };
+  }, [user, profile?.role]);
 
   const fetchStats = async () => {
     if (!user) return;
@@ -98,6 +104,22 @@ const Dashboard = () => {
       setLoading(false);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navbar />
+        <div className="container py-8">
+          <div className="flex items-center justify-center min-h-[400px]">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+              <p className="text-muted-foreground">Loading dashboard...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (profile?.role !== 'admin') {
     return (

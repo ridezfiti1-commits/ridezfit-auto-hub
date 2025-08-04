@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { MobileNav } from "@/components/layout/MobileNav";
+import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -15,34 +16,39 @@ import { supabase } from "@/integrations/supabase/client";
 import { useCart } from "@/contexts/CartContext";
 import { toast } from "@/hooks/use-toast";
 
+// Import Kenyan landscape images
+import kenyaLandscape from "@/assets/kenya-landscape-1.jpg";
+import nairobiCityscape from "@/assets/nairobi-cityscape.jpg";
+import kenyaCountryside from "@/assets/kenya-countryside.jpg";
+
 const Index = () => {
   const [searchMake, setSearchMake] = useState("");
   const [searchModel, setSearchModel] = useState("");
   const [priceRange, setPriceRange] = useState([0, 100000]);
   const { addToCart } = useCart();
 
-  // Hero carousel slides data
+  // Hero carousel slides data with Kenyan backgrounds
   const heroSlides = [
     {
       title: "Trust the Drive. Love the Ride.",
       subtitle: "Every purchase protected by our escrow guarantee",
       buttonText: "Browse Cars",
       buttonLink: "/cars",
-      image: "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=1200&h=600&fit=crop"
+      image: kenyaLandscape
     },
     {
       title: "AI-Powered Car Matching",
       subtitle: "Let our AI find your perfect match",
       buttonText: "Get Matched",
       buttonLink: "/cars",
-      image: "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=1200&h=600&fit=crop"
+      image: nairobiCityscape
     },
     {
       title: "Find Your Soul Ride",
       subtitle: "Discover Kenya's most trusted car marketplace",
       buttonText: "Start Your Journey",
       buttonLink: "/cars",
-      image: "https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?w=1200&h=600&fit=crop"
+      image: kenyaCountryside
     }
   ];
 
@@ -520,6 +526,7 @@ const Index = () => {
         </div>
       </section>
 
+      <Footer />
       <MobileNav />
     </div>
   );

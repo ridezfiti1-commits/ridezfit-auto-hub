@@ -5,8 +5,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
-import { X, Plus } from "lucide-react";
+import { X, Plus, Upload, Link as LinkIcon } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -40,6 +41,15 @@ export const CarForm = ({ car, onSuccess, onCancel }: CarFormProps) => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   
+  // Predefined car features list
+  const predefinedFeatures = [
+    "Air Conditioning", "Power Steering", "ABS Brakes", "Airbags", "Electric Windows",
+    "Central Locking", "Cruise Control", "GPS Navigation", "Bluetooth", "USB Ports",
+    "Backup Camera", "Parking Sensors", "Sunroof", "Heated Seats", "Leather Seats",
+    "Alloy Wheels", "Fog Lights", "Xenon Headlights", "Keyless Entry", "Push Start",
+    "Auto Transmission", "Manual Transmission", "4WD/AWD", "Sport Mode", "Eco Mode"
+  ];
+  
   const [formData, setFormData] = useState({
     make: car?.make || '',
     model: car?.model || '',
@@ -56,8 +66,8 @@ export const CarForm = ({ car, onSuccess, onCancel }: CarFormProps) => {
   });
 
   const [images, setImages] = useState<string[]>(car?.images || ['']);
-  const [features, setFeatures] = useState<string[]>(car?.features || []);
-  const [newFeature, setNewFeature] = useState('');
+  const [selectedFeatures, setSelectedFeatures] = useState<string[]>(car?.features || []);
+  const [newCustomFeature, setNewCustomFeature] = useState('');
 
   const handleInputChange = (field: string, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -77,15 +87,23 @@ export const CarForm = ({ car, onSuccess, onCancel }: CarFormProps) => {
     setImages(images.filter((_, i) => i !== index));
   };
 
-  const addFeature = () => {
-    if (newFeature.trim()) {
-      setFeatures([...features, newFeature.trim()]);
-      setNewFeature('');
+  const toggleFeature = (feature: string) => {
+    setSelectedFeatures(prev => 
+      prev.includes(feature) 
+        ? prev.filter(f => f !== feature)
+        : [...prev, feature]
+    );
+  };
+
+  const addCustomFeature = () => {
+    if (newCustomFeature.trim() && !selectedFeatures.includes(newCustomFeature.trim())) {
+      setSelectedFeatures([...selectedFeatures, newCustomFeature.trim()]);
+      setNewCustomFeature('');
     }
   };
 
-  const removeFeature = (index: number) => {
-    setFeatures(features.filter((_, i) => i !== index));
+  const removeFeature = (feature: string) => {
+    setSelectedFeatures(selectedFeatures.filter(f => f !== feature));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -98,7 +116,7 @@ export const CarForm = ({ car, onSuccess, onCancel }: CarFormProps) => {
       const carData = {
         ...formData,
         images: images.filter(img => img.trim()),
-        features: features.filter(f => f.trim()),
+        features: selectedFeatures,
         admin_id: user.id
       };
 
@@ -283,31 +301,57 @@ export const CarForm = ({ car, onSuccess, onCancel }: CarFormProps) => {
 
       <Card>
         <CardHeader>
-          <CardTitle>Images</CardTitle>
+          <CardTitle>Vehicle Images</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-3">
+          <div className="space-y-4">
+            <div className="text-sm text-muted-foreground mb-3">
+              Add images via URL links. First image will be used as the main display image.
+            </div>
+            
             {images.map((image, index) => (
-              <div key={index} className="flex gap-2">
-                <Input
-                  value={image}
-                  onChange={(e) => updateImage(index, e.target.value)}
-                  placeholder="Image URL"
-                  className="flex-1"
-                />
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => removeImage(index)}
-                  disabled={images.length === 1}
-                >
-                  <X className="h-4 w-4" />
-                </Button>
+              <div key={index} className="space-y-2">
+                <div className="flex gap-2">
+                  <div className="flex-1">
+                    <div className="flex gap-2">
+                      <LinkIcon className="h-4 w-4 mt-3 text-muted-foreground" />
+                      <Input
+                        value={image}
+                        onChange={(e) => updateImage(index, e.target.value)}
+                        placeholder="https://example.com/car-image.jpg"
+                        className="flex-1"
+                      />
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => removeImage(index)}
+                        disabled={images.length === 1}
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Image Preview */}
+                {image && (
+                  <div className="ml-6">
+                    <img 
+                      src={image} 
+                      alt={`Preview ${index + 1}`}
+                      className="w-32 h-24 object-cover rounded border"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).style.display = 'none';
+                      }}
+                    />
+                  </div>
+                )}
               </div>
             ))}
-            <Button type="button" variant="outline" onClick={addImage}>
+            
+            <Button type="button" variant="outline" onClick={addImage} className="w-full">
               <Plus className="h-4 w-4 mr-2" />
-              Add Image
+              Add Another Image
             </Button>
           </div>
         </CardContent>
@@ -315,36 +359,66 @@ export const CarForm = ({ car, onSuccess, onCancel }: CarFormProps) => {
 
       <Card>
         <CardHeader>
-          <CardTitle>Features</CardTitle>
+          <CardTitle>Vehicle Features</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-3">
-            <div className="flex gap-2">
-              <Input
-                value={newFeature}
-                onChange={(e) => setNewFeature(e.target.value)}
-                placeholder="Add a feature..."
-                onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addFeature())}
-              />
-              <Button type="button" onClick={addFeature}>
-                <Plus className="h-4 w-4" />
-              </Button>
+          <div className="space-y-6">
+            {/* Predefined Features Grid */}
+            <div>
+              <Label className="text-base font-medium mb-3 block">Select Features</Label>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                {predefinedFeatures.map((feature) => (
+                  <div key={feature} className="flex items-center space-x-2">
+                    <Checkbox
+                      id={feature}
+                      checked={selectedFeatures.includes(feature)}
+                      onCheckedChange={() => toggleFeature(feature)}
+                    />
+                    <Label
+                      htmlFor={feature}
+                      className="text-sm font-normal cursor-pointer"
+                    >
+                      {feature}
+                    </Label>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Custom Feature Input */}
+            <div>
+              <Label className="text-base font-medium mb-3 block">Add Custom Feature</Label>
+              <div className="flex gap-2">
+                <Input
+                  value={newCustomFeature}
+                  onChange={(e) => setNewCustomFeature(e.target.value)}
+                  placeholder="Enter custom feature..."
+                  onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addCustomFeature())}
+                />
+                <Button type="button" onClick={addCustomFeature} variant="outline">
+                  <Plus className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
             
-            {features.length > 0 && (
-              <div className="flex flex-wrap gap-2">
-                {features.map((feature, index) => (
-                  <Badge key={index} variant="secondary" className="flex items-center gap-1">
-                    {feature}
-                    <button
-                      type="button"
-                      onClick={() => removeFeature(index)}
-                      className="ml-1 hover:text-destructive"
-                    >
-                      <X className="h-3 w-3" />
-                    </button>
-                  </Badge>
-                ))}
+            {/* Selected Features Display */}
+            {selectedFeatures.length > 0 && (
+              <div>
+                <Label className="text-base font-medium mb-3 block">Selected Features</Label>
+                <div className="flex flex-wrap gap-2">
+                  {selectedFeatures.map((feature) => (
+                    <Badge key={feature} variant="secondary" className="flex items-center gap-1">
+                      {feature}
+                      <button
+                        type="button"
+                        onClick={() => removeFeature(feature)}
+                        className="ml-1 hover:text-destructive"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </Badge>
+                  ))}
+                </div>
               </div>
             )}
           </div>
