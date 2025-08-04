@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Slider } from "@/components/ui/slider";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Search, Car, Wrench, Shield, CreditCard, Star, ArrowRight, Heart, Eye } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -19,6 +20,31 @@ const Index = () => {
   const [searchModel, setSearchModel] = useState("");
   const [priceRange, setPriceRange] = useState([0, 100000]);
   const { addToCart } = useCart();
+
+  // Hero carousel slides data
+  const heroSlides = [
+    {
+      title: "Trust the Drive. Love the Ride.",
+      subtitle: "Every purchase protected by our escrow guarantee",
+      buttonText: "Browse Cars",
+      buttonLink: "/cars",
+      image: "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=1200&h=600&fit=crop"
+    },
+    {
+      title: "AI-Powered Car Matching",
+      subtitle: "Let our AI find your perfect match",
+      buttonText: "Get Matched",
+      buttonLink: "/cars",
+      image: "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=1200&h=600&fit=crop"
+    },
+    {
+      title: "Find Your Soul Ride",
+      subtitle: "Discover Kenya's most trusted car marketplace",
+      buttonText: "Start Your Journey",
+      buttonLink: "/cars",
+      image: "https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?w=1200&h=600&fit=crop"
+    }
+  ];
 
   // Fetch featured cars
   const { data: featuredCars = [] } = useQuery({
@@ -98,23 +124,49 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
       
-      {/* Hero Section */}
-      <section className="relative bg-gradient-hero text-white py-20 lg:py-32">
-        <div className="absolute inset-0 bg-black/20" />
-        <div className="container relative z-10">
-          <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl lg:text-6xl font-bold mb-6 animate-fade-in">
-              Find Your Perfect Ride
-            </h1>
-            <p className="text-xl lg:text-2xl mb-8 text-white/90">
-              The ultimate car marketplace with vehicles, accessories, and services all in one place
-            </p>
-            
-            {/* Search Bar */}
-            <div className="bg-white/10 backdrop-blur-md rounded-lg p-6 glass-effect">
+      {/* Hero Carousel */}
+      <section className="relative">
+        <Carousel className="w-full">
+          <CarouselContent>
+            {heroSlides.map((slide, index) => (
+              <CarouselItem key={index}>
+                <div className="relative h-[70vh] min-h-[600px] flex items-center justify-center">
+                  <div 
+                    className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                    style={{ backgroundImage: `url(${slide.image})` }}
+                  >
+                    <div className="absolute inset-0 bg-black/40" />
+                  </div>
+                  
+                  <div className="relative z-10 text-center text-white max-w-4xl mx-auto px-4">
+                    <h1 className="text-4xl lg:text-6xl font-bold mb-6 animate-fade-in">
+                      {slide.title}
+                    </h1>
+                    <p className="text-xl lg:text-2xl mb-8 text-white/90">
+                      {slide.subtitle}
+                    </p>
+                    <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-white px-8 py-3">
+                      <Link to={slide.buttonLink}>
+                        {slide.buttonText}
+                        <ArrowRight className="h-5 w-5 ml-2" />
+                      </Link>
+                    </Button>
+                  </div>
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious className="left-4" />
+          <CarouselNext className="right-4" />
+        </Carousel>
+
+        {/* Search Bar */}
+        <div className="relative -mt-16 z-20">
+          <div className="container">
+            <div className="bg-white/95 backdrop-blur-md rounded-lg p-6 shadow-lg max-w-6xl mx-auto">
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <Select value={searchMake} onValueChange={setSearchMake}>
-                  <SelectTrigger className="bg-white text-black">
+                  <SelectTrigger className="bg-white border-gray-200">
                     <SelectValue placeholder="Select Make" />
                   </SelectTrigger>
                   <SelectContent>
@@ -127,7 +179,7 @@ const Index = () => {
                 </Select>
                 
                 <Select value={searchModel} onValueChange={setSearchModel}>
-                  <SelectTrigger className="bg-white text-black">
+                  <SelectTrigger className="bg-white border-gray-200">
                     <SelectValue placeholder="Select Model" />
                   </SelectTrigger>
                   <SelectContent>
@@ -138,21 +190,21 @@ const Index = () => {
                   </SelectContent>
                 </Select>
                 
-                <div className="bg-white rounded-md p-3">
+                <div className="bg-white rounded-md p-3 border border-gray-200">
                   <label className="text-sm text-gray-600 mb-2 block">
-                    Price Range: ${priceRange[0].toLocaleString()} - ${priceRange[1].toLocaleString()}
+                    Price Range: KSh {priceRange[0].toLocaleString()} - KSh {priceRange[1].toLocaleString()}
                   </label>
                   <Slider
                     value={priceRange}
                     onValueChange={setPriceRange}
-                    max={100000}
-                    min={0}
-                    step={1000}
+                    max={5000000}
+                    min={100000}
+                    step={100000}
                     className="w-full"
                   />
                 </div>
                 
-                <Button size="lg" asChild className="bg-primary hover:bg-primary-dark text-white">
+                <Button size="lg" asChild className="bg-primary hover:bg-primary/90 text-white">
                   <Link to="/cars">
                     <Search className="h-5 w-5 mr-2" />
                     Search Cars
