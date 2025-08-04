@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
+import { Routes, Route } from "react-router-dom";
 import { Plus, Car, Package, Wrench, Users, DollarSign, TrendingUp } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { DashboardSidebar } from "@/components/layout/DashboardSidebar";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -141,10 +144,14 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      
-      <div className="container py-6">
+    <SidebarProvider>
+      <div className="min-h-screen bg-background flex w-full">
+        <DashboardSidebar />
+        
+        <div className="flex-1 flex flex-col">
+          <Navbar />
+          
+          <div className="container py-6 flex-1">
         <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-3xl font-bold">Showroom Dashboard</h1>
@@ -304,8 +311,10 @@ const Dashboard = () => {
             </div>
           </TabsContent>
         </Tabs>
+          </div>
+        </div>
       </div>
-    </div>
+    </SidebarProvider>
   );
 };
 

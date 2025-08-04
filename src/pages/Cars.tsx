@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { MobileNav } from "@/components/layout/MobileNav";
+import ViewSwitcher from "@/components/layout/ViewSwitcher";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -11,6 +12,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Link } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
 import { Search, Filter, Car, Heart, Eye } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const Cars = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -21,6 +23,7 @@ const Cars = () => {
   const [yearFilter, setYearFilter] = useState("all");
   const [priceRange, setPriceRange] = useState([0, 5000000]);
   const [sortBy, setSortBy] = useState("newest");
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const { addToCart } = useCart();
 
   const { data: cars = [], isLoading } = useQuery({
@@ -249,18 +252,30 @@ const Cars = () => {
           </div>
         </div>
 
-        {/* Results count */}
-        <div className="mb-6">
+        {/* Results count and view switcher */}
+        <div className="mb-6 flex items-center justify-between">
           <p className="text-muted-foreground">
             {isLoading ? 'Loading...' : `${cars.length} cars found`}
           </p>
+          <ViewSwitcher view={viewMode} onViewChange={setViewMode} />
         </div>
 
-        {/* Cars Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Cars Grid/List */}
+        <div className={cn(
+          "gap-6",
+          viewMode === 'grid' 
+            ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+            : "flex flex-col space-y-4"
+        )}>
           {cars.map((car) => (
-            <Card key={car.id} className="card-hover overflow-hidden">
-              <div className="aspect-video bg-muted relative">
+            <Card key={car.id} className={cn(
+              "card-hover overflow-hidden",
+              viewMode === 'list' && "flex flex-row h-48"
+            )}>
+              <div className={cn(
+                "bg-muted relative",
+                viewMode === 'grid' ? "aspect-video" : "w-64 h-full flex-shrink-0"
+              )}>
                 {car.images && car.images[0] ? (
                   <img
                     src={car.images[0]}
@@ -292,10 +307,14 @@ const Cars = () => {
                 </div>
               </div>
               
-              <CardHeader>
-                <CardTitle className="text-xl">
-                  {car.year} {car.make} {car.model}
-                </CardTitle>
+              <div className={cn(
+                "flex flex-col",
+                viewMode === 'list' && "flex-1"
+              )}>
+                <CardHeader className={viewMode === 'list' ? "pb-2" : ""}>
+                  <CardTitle className="text-xl">
+                    {car.year} {car.make} {car.model}
+                  </CardTitle>
                 <div className="flex items-center justify-between">
                   <span className="text-2xl font-bold text-primary">
                     ${car.price?.toLocaleString() || 'N/A'}
@@ -308,7 +327,9 @@ const Cars = () => {
                 </div>
               </CardHeader>
               
-              <CardContent>
+              <CardContent className={cn(
+                viewMode === 'list' && "flex-1 py-2"
+              )}>
                 <p className="text-muted-foreground text-sm mb-3">
                   {car.description?.substring(0, 100)}...
                 </p>
@@ -368,7 +389,10 @@ const Cars = () => {
                 </div>
               </CardContent>
               
-              <CardFooter className="flex gap-2">
+              <CardFooter className={cn(
+                "flex gap-2",
+                viewMode === 'list' && "mt-auto"
+              )}>
                 <Button asChild variant="outline" className="flex-1">
                   <Link to={`/cars/${car.id}`}>
                     View Details
@@ -381,6 +405,7 @@ const Cars = () => {
                   Add to Cart
                 </Button>
               </CardFooter>
+              </div>
             </Card>
           ))}
         </div>

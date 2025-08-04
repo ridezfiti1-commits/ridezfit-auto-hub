@@ -21,6 +21,7 @@ import Showrooms from "@/pages/Showrooms";
 import Learn from "@/pages/Learn";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { CartProvider } from "@/contexts/CartContext";
+import ScrollToTop from "@/components/layout/ScrollToTop";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +32,7 @@ function App() {
         <AuthProvider>
           <CartProvider>
             <Router>
+              <ScrollToTop />
               <TooltipProvider>
                 <div className="min-h-screen bg-background">
                   <Routes>

@@ -9,7 +9,7 @@ interface Profile {
   email: string | null;
   full_name: string | null;
   phone: string | null;
-  role: string;
+  role: 'buyer' | 'showroom' | 'system_admin';
   created_at: string;
   updated_at: string;
 }

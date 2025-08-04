@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { MobileNav } from "@/components/layout/MobileNav";
+import ViewSwitcher from "@/components/layout/ViewSwitcher";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -10,11 +11,13 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useCart } from "@/contexts/CartContext";
 import { Search, Filter, Wrench, Clock, Calendar } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const Services = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("");
   const [sortBy, setSortBy] = useState("newest");
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const { addToCart } = useCart();
 
   const { data: services = [], isLoading } = useQuery({
@@ -130,15 +133,21 @@ const Services = () => {
           </div>
         </div>
 
-        {/* Results count */}
-        <div className="mb-6">
+        {/* Results count and view switcher */}
+        <div className="mb-6 flex items-center justify-between">
           <p className="text-muted-foreground">
             {isLoading ? 'Loading...' : `${services.length} services available`}
           </p>
+          <ViewSwitcher view={viewMode} onViewChange={setViewMode} />
         </div>
 
-        {/* Services Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Services Grid/List */}
+        <div className={cn(
+          "gap-6",
+          viewMode === 'grid' 
+            ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+            : "flex flex-col space-y-4"
+        )}>
           {services.map((service) => (
             <Card key={service.id} className="card-hover overflow-hidden">
               <div className="aspect-video bg-muted relative">

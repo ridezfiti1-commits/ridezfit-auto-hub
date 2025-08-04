@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { MobileNav } from "@/components/layout/MobileNav";
+import ViewSwitcher from "@/components/layout/ViewSwitcher";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -10,11 +11,13 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useCart } from "@/contexts/CartContext";
 import { Search, Filter, Wrench, ShoppingCart } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const Merchandise = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [sortBy, setSortBy] = useState("newest");
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const { addToCart } = useCart();
 
   const { data: merchandise = [], isLoading } = useQuery({
@@ -130,15 +133,21 @@ const Merchandise = () => {
           </div>
         </div>
 
-        {/* Results count */}
-        <div className="mb-6">
+        {/* Results count and view switcher */}
+        <div className="mb-6 flex items-center justify-between">
           <p className="text-muted-foreground">
             {isLoading ? 'Loading...' : `${merchandise.length} products found`}
           </p>
+          <ViewSwitcher view={viewMode} onViewChange={setViewMode} />
         </div>
 
-        {/* Merchandise Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {/* Merchandise Grid/List */}
+        <div className={cn(
+          "gap-6",
+          viewMode === 'grid' 
+            ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+            : "flex flex-col space-y-4"
+        )}>
           {merchandise.map((item) => (
             <Card key={item.id} className="card-hover overflow-hidden">
               <div className="aspect-square bg-muted relative">
