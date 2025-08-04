@@ -14,8 +14,8 @@ import { Search, Filter, Car, Heart, Eye } from "lucide-react";
 
 const Cars = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [makeFilter, setMakeFilter] = useState("");
-  const [conditionFilter, setConditionFilter] = useState("");
+  const [makeFilter, setMakeFilter] = useState("all");
+  const [conditionFilter, setConditionFilter] = useState("all");
   const [sortBy, setSortBy] = useState("newest");
   const { addToCart } = useCart();
 
@@ -31,11 +31,11 @@ const Cars = () => {
         query = query.or(`make.ilike.%${searchTerm}%,model.ilike.%${searchTerm}%`);
       }
 
-      if (makeFilter) {
+      if (makeFilter && makeFilter !== "all") {
         query = query.eq('make', makeFilter);
       }
 
-      if (conditionFilter) {
+      if (conditionFilter && conditionFilter !== "all") {
         query = query.eq('condition', conditionFilter);
       }
 
@@ -115,7 +115,7 @@ const Cars = () => {
                 <SelectValue placeholder="All Makes" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Makes</SelectItem>
+                <SelectItem value="all">All Makes</SelectItem>
                 {makes.map(make => (
                   <SelectItem key={make} value={make}>{make}</SelectItem>
                 ))}
@@ -127,7 +127,7 @@ const Cars = () => {
                 <SelectValue placeholder="All Conditions" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Conditions</SelectItem>
+                <SelectItem value="all">All Conditions</SelectItem>
                 <SelectItem value="new">New</SelectItem>
                 <SelectItem value="used">Used</SelectItem>
                 <SelectItem value="certified">Certified</SelectItem>
