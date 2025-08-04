@@ -14,6 +14,27 @@ export type Database = {
   }
   public: {
     Tables: {
+      car_views: {
+        Row: {
+          car_id: string
+          created_at: string
+          id: string
+          user_id: string | null
+        }
+        Insert: {
+          car_id: string
+          created_at?: string
+          id?: string
+          user_id?: string | null
+        }
+        Update: {
+          car_id?: string
+          created_at?: string
+          id?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       cars: {
         Row: {
           admin_id: string
@@ -32,8 +53,11 @@ export type Database = {
           price: number
           showroom_id: string | null
           status: string
+          stock_count: number | null
           transmission: string | null
           updated_at: string
+          video_url: string | null
+          view_count: number | null
           year: number
         }
         Insert: {
@@ -53,8 +77,11 @@ export type Database = {
           price: number
           showroom_id?: string | null
           status?: string
+          stock_count?: number | null
           transmission?: string | null
           updated_at?: string
+          video_url?: string | null
+          view_count?: number | null
           year: number
         }
         Update: {
@@ -74,8 +101,11 @@ export type Database = {
           price?: number
           showroom_id?: string | null
           status?: string
+          stock_count?: number | null
           transmission?: string | null
           updated_at?: string
+          video_url?: string | null
+          view_count?: number | null
           year?: number
         }
         Relationships: [
@@ -327,6 +357,8 @@ export type Database = {
           logo_url: string | null
           phone: string | null
           showroom_name: string
+          total_views: number | null
+          total_visits: number | null
           updated_at: string
           website: string | null
         }
@@ -340,6 +372,8 @@ export type Database = {
           logo_url?: string | null
           phone?: string | null
           showroom_name: string
+          total_views?: number | null
+          total_visits?: number | null
           updated_at?: string
           website?: string | null
         }
@@ -353,6 +387,8 @@ export type Database = {
           logo_url?: string | null
           phone?: string | null
           showroom_name?: string
+          total_views?: number | null
+          total_visits?: number | null
           updated_at?: string
           website?: string | null
         }
