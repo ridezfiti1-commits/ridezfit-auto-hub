@@ -15,13 +15,14 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useCart } from "@/contexts/CartContext";
 import { toast } from "@/hooks/use-toast";
-import CarShowcase from "@/components/sections/CarShowcase";
 import { ChatAssistant } from "@/components/layout/ChatAssistant";
 
-// Import Kenyan landscape images
-import kenyaLandscape from "@/assets/kenya-landscape-1.jpg";
-import nairobiCityscape from "@/assets/nairobi-cityscape.jpg";
-import kenyaCountryside from "@/assets/kenya-countryside.jpg";
+// Import car category images
+import safariVehicle from "@/assets/safari-vehicle.jpg";
+import sportsCar from "@/assets/sports-car.jpg";
+import familyCar from "@/assets/family-car.jpg";
+import luxuryCar from "@/assets/luxury-car.jpg";
+import electricCar from "@/assets/electric-car.jpg";
 
 const Index = () => {
   const [searchMake, setSearchMake] = useState("");
@@ -29,28 +30,42 @@ const Index = () => {
   const [priceRange, setPriceRange] = useState([0, 100000]);
   const { addToCart } = useCart();
 
-  // Hero carousel slides data with Kenyan backgrounds
-  const heroSlides = [
+  // Car category carousel slides data
+  const carCategories = [
     {
-      title: "AI-Powered Car Matching",
-      subtitle: "Let our AI find your perfect match",
-      buttonText: "Get Matched",
-      buttonLink: "/cars",
-      image: nairobiCityscape
+      title: "Safari Vehicles",
+      subtitle: "Adventure-ready 4WDs for Kenya's terrain",
+      buttonText: "View All",
+      buttonLink: "/cars?category=safari",
+      image: safariVehicle
     },
     {
-      title: "Find Your Perfect Match",
-      subtitle: "Discover Kenya's most trusted car marketplace",
-      buttonText: "Start Your Journey",
-      buttonLink: "/cars",
-      image: kenyaCountryside
+      title: "Sports Cars",
+      subtitle: "High-performance vehicles for the enthusiast",
+      buttonText: "Explore Category",
+      buttonLink: "/cars?category=sports",
+      image: sportsCar
     },
     {
-      title: "Premium Car Selection",
-      subtitle: "Quality vehicles from trusted showrooms",
-      buttonText: "Browse Cars",
-      buttonLink: "/cars",
-      image: kenyaLandscape
+      title: "Family Cars",
+      subtitle: "Spacious and practical for loved ones",
+      buttonText: "View All",
+      buttonLink: "/cars?category=family",
+      image: familyCar
+    },
+    {
+      title: "Luxury Vehicles",
+      subtitle: "Premium comfort and executive styling",
+      buttonText: "Explore Category",
+      buttonLink: "/cars?category=luxury",
+      image: luxuryCar
+    },
+    {
+      title: "Electric Vehicles",
+      subtitle: "Sustainable transportation for the future",
+      buttonText: "View All",
+      buttonLink: "/cars?category=electric",
+      image: electricCar
     }
   ];
 
@@ -132,33 +147,44 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
       
-      {/* Car Showcase */}
-      <CarShowcase />
+      {/* Find Your Perfect Match Section */}
+      <section className="py-16 lg:py-20 bg-gradient-to-b from-muted/30 to-background">
+        <div className="container">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl lg:text-5xl font-bold mb-4 text-gradient">
+              Find Your Perfect Match
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Discover our diverse collection of vehicles, from rugged safari cars to luxury sedans
+            </p>
+          </div>
+        </div>
+      </section>
       
-      {/* Hero Carousel */}
+      {/* Car Categories Carousel */}
       <section className="relative">
         <Carousel className="w-full">
           <CarouselContent>
-            {heroSlides.map((slide, index) => (
+            {carCategories.map((category, index) => (
               <CarouselItem key={index}>
                 <div className="relative h-[70vh] min-h-[600px] flex items-center justify-center">
                   <div 
                     className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-                    style={{ backgroundImage: `url(${slide.image})` }}
+                    style={{ backgroundImage: `url(${category.image})` }}
                   >
                     <div className="absolute inset-0 bg-black/40" />
                   </div>
                   
                   <div className="relative z-10 text-center text-white max-w-4xl mx-auto px-4">
                     <h1 className="text-4xl lg:text-6xl font-bold mb-6 animate-fade-in">
-                      {slide.title}
+                      {category.title}
                     </h1>
                     <p className="text-xl lg:text-2xl mb-8 text-white/90">
-                      {slide.subtitle}
+                      {category.subtitle}
                     </p>
                     <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-white px-8 py-3">
-                      <Link to={slide.buttonLink}>
-                        {slide.buttonText}
+                      <Link to={category.buttonLink}>
+                        {category.buttonText}
                         <ArrowRight className="h-5 w-5 ml-2" />
                       </Link>
                     </Button>

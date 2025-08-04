@@ -105,31 +105,44 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signUp = async (email: string, password: string, fullName: string, role: string = 'buyer') => {
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: `${window.location.origin}/`,
-        data: {
-          full_name: fullName,
-          role: role,
+    setLoading(true);
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/`,
+          data: {
+            full_name: fullName,
+            role: role,
+          },
         },
-      },
-    });
+      });
 
-    if (error) {
+      if (error) throw error;
+
+      // If user is created immediately (email confirmation disabled)
+      if (data.user && !data.user.email_confirmed_at) {
+        toast({
+          title: "Success",
+          description: "Account created! Please check your email to verify your account.",
+        });
+      } else if (data.user?.email_confirmed_at) {
+        toast({
+          title: "Success",
+          description: "Account created successfully!",
+        });
+      }
+    } catch (error: any) {
       toast({
         title: "Error",
         description: error.message,
         variant: "destructive",
       });
       throw error;
+    } finally {
+      setLoading(false);
     }
-
-    toast({
-      title: "Success",
-      description: "Account created successfully! Please check your email to verify your account.",
-    });
   };
 
   const signOut = async () => {
