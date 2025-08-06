@@ -148,18 +148,6 @@ const Index = () => {
       <Navbar />
       
       {/* Find Your Perfect Match Section */}
-      <section className="py-16 lg:py-20 bg-gradient-to-b from-muted/30 to-background">
-        <div className="container">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-5xl font-bold mb-4 text-gradient">
-              Find Your Perfect Match
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Discover our diverse collection of vehicles, from rugged safari cars to luxury sedans
-            </p>
-          </div>
-        </div>
-      </section>
       
       {/* Car Categories Carousel */}
       <section className="relative">
