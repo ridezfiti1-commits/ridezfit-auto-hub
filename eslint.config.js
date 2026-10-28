@@ -4,6 +4,9 @@ import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
 import tseslint from "typescript-eslint";
 
+var require = createRequire(import.meta.url);
+var module = { exports: {} };
+
 export default tseslint.config(
   { ignores: ["dist"] },
   {
